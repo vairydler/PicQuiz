@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <style>
+    body{
+      width:100%;
+      height:100%;
+      margin:0px;
+    }
+    .mask{
+      background-color:green;
+      position:absolute;
+    }
+    .mask.false{
+      opacity:0;
+    }
+    .mask.true{
+      opacity:100;
+    }
+    img{
+      position:absolute;
+      width:100%;
+    }
+    button{
+      padding:10px;
+    }
+    .loading{
+      visibility: hidden;
+    }
+  </style>
+  <script src="https://unpkg.com/vue@next"></script>
+  <?!= HtmlService.createHtmlOutputFromFile("C_Vue_出題エンジン").getContent() ?>
+  <script name="写真集">
+    let piclist = <?!= piclist ?>;
+    let dbg = <?!= dbg ?>;
+  </script>
+  <script>
+    window.addEventListener("load",()=>{
+      let engine = new 出題エンジン();
+      engine.次();
+
+      window.addEventListener('resize', ()=>{
+        engine.マスクリサイズ( document.querySelector(".draw img") );
+      });
+
+      if( dbg )
+      {
+        console.table( piclist );
+      }
+    });
+
+    getJSON=function(){
+      console.log("gets");
+
+      fetch("https://script.google.com/macros/s/AKfycbxx6GtE-rWtcA9qdxg8cXNCx0WWPEVFYEETQm16WXE/dev?api",
+        {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        }        
+      );
+      //.then((response) => response.json())
+      //.then((data) => console.log(data));
+    }
+  </script>
+  <body>
+    <a href="https://docs.google.com/spreadsheets/d/1Giq0rCVZnJX_-KrITVczXsu_0e7i008mUM9xA8DJD24/edit?usp=sharing">マスタデータ</a>
+    <div id="d_問題">
+      <div>
+        <button @click="前">前</button>
+        <input disabled v-bind:value="現在位置"></input>
+        <button @click="次">次</button>
+      </div>
+      <div class="draw" :class="[画像読み込み中 ? 'loading':'']">
+        <img v-bind:src="問題" @load="画像読み込み完了">
+        <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
+      </div>
+    </div>
+  </body>
+</html>

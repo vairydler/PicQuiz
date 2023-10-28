@@ -1,0 +1,31 @@
+<script name="vue">
+(function()
+{
+	function ヘルプエンジン()
+	{
+		function defval(){
+			return {
+        api:apiref
+			};
+		};
+
+		const quiz = {
+			data(){
+        ret = defval();
+
+				return ret;
+			},
+			computed:{
+			},
+			watch:{
+			},
+			methods:{
+			},
+		}
+		
+		return Vue.createApp( quiz ).mount( "#d_ヘルプ" );
+	};
+
+  window.ヘルプエンジン = ヘルプエンジン;
+})();
+</script>

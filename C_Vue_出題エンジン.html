@@ -1,0 +1,113 @@
+<script name="vue">
+(function()
+{
+	function 出題エンジン()
+	{
+		function defval(){
+			return {
+        現在位置:-1,
+        出題済みリスト:[...piclist],
+        マスク:false,
+        マスクサイズ:{w:150,h:100},
+        画像読み込み中:false,
+			};
+		};
+
+		const quiz = {
+			data(){
+        ret = defval();
+
+        ret.出題済みリスト.forEach(
+          (e,i,a)=>
+          {
+              let rndidx = Math.floor(Math.random() * i);
+              [a[i],a[rndidx]] = [a[rndidx],a[i]];
+              //console.table( a );
+          }
+        )
+
+				return ret;
+			},
+			computed:{
+				問題:{
+					get(){
+            return this.出題済みリスト[ this.現在位置 ];
+					}
+				}
+			},
+			watch:{
+        現在位置(){
+          this.マスク=true;
+        }
+			},
+			methods:{
+        次(){
+          let 現在位置 = this.現在位置;
+          if( this.出題済みリスト.length-1 > 現在位置 )
+          {
+            現在位置++;
+          }
+
+          /* ３個先読み */
+          for( let i=現在位置; i < (現在位置+3); i++)
+          {
+            if( this.出題済みリスト.length > i )
+            {
+              if(0)
+              {
+                var oReq = new XMLHttpRequest();
+                oReq.open("GET", mondai);
+                oReq.send();
+                console.log("req");
+              }
+              else
+              {
+                let img = new Image();
+                img.src = this.出題済みリスト[i];
+                console.log("img");
+              }
+            }
+            else
+            {
+              break;
+            }
+          }
+
+          if( this.現在位置 != 現在位置 )
+          {
+            this.画像読み込み中 = true;
+          }
+          this.現在位置 = 現在位置;
+        },
+        前(){
+          if( 0 < this.現在位置 )
+          {
+            this.現在位置--;
+            this.画像読み込み中 = true;
+          }
+        },
+        マスク切り替え(){
+          this.マスク = !this.マスク;
+        },
+        画像読み込み完了(){
+          this.画像読み込み中 = false;
+          this.マスクリサイズ( document.querySelector(".draw img") );
+        },
+        マスクリサイズ(画像)
+        {
+          let w = 画像.width;
+          let h = 画像.height;
+          let hi = w/h;
+
+          this.マスクサイズ.h = h*0.25;
+          this.マスクサイズ.w = this.マスクサイズ.h*hi;
+        }
+			}
+		}
+		
+		return Vue.createApp( quiz ).mount( "#d_問題" );
+	};
+
+  window.出題エンジン = 出題エンジン;
+})();
+</script>

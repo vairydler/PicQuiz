@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script src="https://unpkg.com/vue@next"></script>
+    <?!= HtmlService.createHtmlOutputFromFile("C_Vue_ヘルプエンジン").getContent() ?>
+    <script>
+      let apiref = <?!= apiref ?>;
+      window.addEventListener("load",()=>{
+        let engine = new ヘルプエンジン();
+      });
+    </script>
+  </head>
+  <body id="d_ヘルプ">
+    <table border=1>
+      <tr v-for="(item, index) in api">
+        <td>{{index}}</td><td>{{item}}</td>
+      </tr>
+    </table>
+  </body>
+</html>
