@@ -1,0 +1,81 @@
+<script name="other">
+    window.addEventListener("load",()=>{
+      let engine = new 出題エンジン();
+
+      window.addEventListener('resize', ()=>{
+        engine.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+      });
+
+      if( dbg )
+      {
+        console.table( piclist );
+      }
+    });
+
+    class Storage{
+      constructor() {
+        // クラスのインスタンスごとに異なる値を持たせる読み取り専用のプロパティ
+        this.storagekey = "vairy.FindPic";
+
+        Object.defineProperty(this, 'storagekey', { writable: false });
+      }
+      get(){
+        let ret = localStorage.getItem(this.storageKey);
+
+        try{
+          ret = JSON.parse(ret);
+        }catch{
+          ret = {};
+        }
+
+        return ret;
+      }
+      set(value){
+        let ret = false;
+        try{
+          localStorage.setItem(this.storageKey,JSON.stringify(value));
+          ret = true;
+        }
+        catch(e){
+          if(e.code === DOMException.QUOTA_EXCEEDED_ERR)
+          {
+            // 容量制限を超えたエラーのハンドリング
+            alert('localStorage容量制限を超えました。');
+          }
+          else
+          {
+            alert("その他のストレージ書き込み時異常");
+          }
+        }
+
+        return ret;
+      }
+      clear(){
+        localstorage.removeItem(this.storagekey);
+      }
+    }
+
+    class XorShift {
+      constructor(seed) {
+        this.seed = seed;
+      }
+
+      #next() {
+        let x = this.seed;
+        x ^= (x << 21);
+        x ^= (x >>> 35);
+        x ^= (x << 4);
+        this.seed = x;
+
+        return x;
+      }
+      // 32ビット整数のXORシフトアルゴリズム
+      s() {
+        return this.#next() / 0x80000000; // 0から1の範囲の浮動小数点数を生成
+      }
+
+      u() {
+        return (this.#next()>>>0) / 0x100000000; // 0から1の範囲の浮動小数点数を生成
+      }
+    }
+</script>

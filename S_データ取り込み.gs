@@ -16,7 +16,10 @@ class データ取込{
     return cellary.map(e=>{
       let ret = {};
       e.forEach((e,i)=>{
-        ret[objkey[i]] = e;
+        if( e != "")
+        {
+          ret[objkey[i]] = e;
+        }
       });
 
       return ret;

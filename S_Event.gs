@@ -24,7 +24,7 @@ function doGet(e){
   else
   if( e.parameter.hasOwnProperty("api") )
   {
-    Logger.log( prop.getProperty(prop_URL) );
+    /* Logger.log( prop.getProperty(prop_URL) ); */
   
     ret = ContentService.createTextOutput(prop.getProperty(prop_URL)).setMimeType(ContentService.MimeType.JSON)
   }

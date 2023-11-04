@@ -3,13 +3,35 @@
 {
 	function 出題エンジン()
 	{
+    const 先読み = 2;
+    const storage = new Storage();
+
+    function 先読みオフセット(現在レイヤー,対象レイヤー,範囲)
+    {
+      let オフセット = 対象レイヤー - 現在レイヤー;
+      
+      /* オフセットが範囲外の場合は一周回す */
+      if( 範囲 < Math.abs(オフセット) )
+      {
+        const max = 範囲*2+1;
+        /* 正数 */
+        オフセット += ( 0<オフセット) ? -max : max;
+      }
+
+      return オフセット;
+    }
+
 		function defval(){
 			return {
-        現在位置:-1,
-        出題済みリスト:[...piclist],
-        マスク:false,
+        s:{
+          現在位置:0,
+          リストサイズ:piclist.length,
+          seed:new Date(),
+        },
+        問題リスト:[],
+        マスク:true,
         マスクサイズ:{w:150,h:100},
-        画像読み込み中:false,
+        レイヤー:0,
 			};
 		};
 
@@ -17,81 +39,85 @@
 			data(){
         ret = defval();
 
-        ret.出題済みリスト.forEach(
+        /* ローカルストレージから読み出し */
+        {
+          let data = storage.get();
+        
+          ret.s.現在位置 = data.現在位置 || 0;
+          ret.s.リストサイズ = data.リストサイズ || piclist.length;
+          ret.s.seed = data.seed || new Date();
+
+          storage.set(ret.s);
+        }
+        
+        let rnd = new XorShift(ret.s.seed);
+
+        ret.問題リスト = [...new Array(ret.s.リストサイズ)].map((e,i,a)=>i);
+        ret.問題リスト.forEach(
           (e,i,a)=>
           {
-              let rndidx = Math.floor(Math.random() * i);
-              [a[i],a[rndidx]] = [a[rndidx],a[i]];
-              //console.table( a );
+            let rndidx = Math.round(rnd.u() * i);
+            [a[i],a[rndidx]] = [a[rndidx],a[i]];
           }
-        )
+        );
 
 				return ret;
 			},
 			computed:{
-				問題:{
-					get(){
-            return this.出題済みリスト[ this.現在位置 ];
-					}
-				}
 			},
 			watch:{
-        現在位置(){
+        "s.現在位置":function(){
           this.マスク=true;
         }
 			},
 			methods:{
+				問題(imgidx){
+          let オフセット = 先読みオフセット(this.レイヤー,imgidx,先読み);
+
+          return piclist[ this.問題リスト[ this.s.現在位置+ オフセット ] ];
+				},
         次(){
-          let 現在位置 = this.現在位置;
-          if( this.出題済みリスト.length-1 > 現在位置 )
+          if( this.問題リスト.length-1 > this.s.現在位置 )
           {
-            現在位置++;
-          }
+            this.s.現在位置++;
+            this.レイヤー++;
 
-          /* ３個先読み */
-          for( let i=現在位置; i < (現在位置+3); i++)
-          {
-            if( this.出題済みリスト.length > i )
+            if( (先読み*2) < this.レイヤー )
             {
-              if(0)
-              {
-                var oReq = new XMLHttpRequest();
-                oReq.open("GET", mondai);
-                oReq.send();
-                console.log("req");
-              }
-              else
-              {
-                let img = new Image();
-                img.src = this.出題済みリスト[i];
-                console.log("img");
-              }
+              this.レイヤー = 0;
             }
-            else
-            {
-              break;
-            }
-          }
 
-          if( this.現在位置 != 現在位置 )
-          {
-            this.画像読み込み中 = true;
+            this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+
+            storage.set( this.s );
           }
-          this.現在位置 = 現在位置;
         },
         前(){
-          if( 0 < this.現在位置 )
+          if( 0 < this.s.現在位置 )
           {
-            this.現在位置--;
-            this.画像読み込み中 = true;
+            this.s.現在位置--;
+            this.s.レイヤー--;
+
+            if( 0 > this.レイヤー )
+            {
+              this.レイヤー = (先読み*2);
+            }
+
+            this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+
+            storage.set( this.s );
           }
+        },
+        キャッシュクリア(){
+          /* ローカルストレージを削除し、リロード */
+          storage.clear();
+          location.reload();
         },
         マスク切り替え(){
           this.マスク = !this.マスク;
         },
         画像読み込み完了(){
-          this.画像読み込み中 = false;
-          this.マスクリサイズ( document.querySelector(".draw img") );
+          this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
         },
         マスクリサイズ(画像)
         {
