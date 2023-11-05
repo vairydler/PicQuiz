@@ -26,7 +26,7 @@
         s:{
           現在位置:0,
           リストサイズ:piclist.length,
-          seed:new Date(),
+          seed:new Date().getTime(),
         },
         問題リスト:[],
         マスク:true,
@@ -35,21 +35,23 @@
 			};
 		};
 
-		const quiz = {
-			data(){
+    function datainit(){
         ret = defval();
 
         /* ローカルストレージから読み出し */
         {
           let data = storage.get();
         
-          ret.s.現在位置 = data.現在位置 || 0;
-          ret.s.リストサイズ = data.リストサイズ || piclist.length;
-          ret.s.seed = data.seed || new Date();
+          try{
+            ret.s.現在位置 = data.現在位置 || 0;
+            ret.s.リストサイズ = data.リストサイズ || piclist.length;
+            ret.s.seed = data.seed || new Date().getTime();
+          }catch(e){
+            
+          }
 
           storage.set(ret.s);
         }
-        
         let rnd = new XorShift(ret.s.seed);
 
         ret.問題リスト = [...new Array(ret.s.リストサイズ)].map((e,i,a)=>i);
@@ -61,13 +63,20 @@
           }
         );
 
-				return ret;
+        return ret;
+    };
+
+		const quiz = {
+			data(){
+				return datainit();
 			},
 			computed:{
 			},
 			watch:{
         "s.現在位置":function(){
           this.マスク=true;
+          this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+          storage.set( this.s );
         }
 			},
 			methods:{
@@ -86,32 +95,30 @@
             {
               this.レイヤー = 0;
             }
-
-            this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
-
-            storage.set( this.s );
           }
         },
         前(){
           if( 0 < this.s.現在位置 )
           {
             this.s.現在位置--;
-            this.s.レイヤー--;
+            this.レイヤー--;
 
             if( 0 > this.レイヤー )
             {
               this.レイヤー = (先読み*2);
             }
-
-            this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
-
-            storage.set( this.s );
           }
         },
         キャッシュクリア(){
-          /* ローカルストレージを削除し、リロード */
-          storage.clear();
-          location.reload();
+          if( confirm("問題番号のクリアと再シャッフルをします") )
+          {
+            /* ローカルストレージを削除し、リロード */
+            storage.clear();
+            
+            let init = datainit();
+            this.s = init.s;
+            this.問題リスト = init.問題リスト;
+          }
         },
         マスク切り替え(){
           this.マスク = !this.マスク;

@@ -27,6 +27,7 @@
       display:none;
     }
     button{
+      margin:10px;
       padding:10px;
     }
   </style>
@@ -38,11 +39,11 @@
     let dbg = <?!= dbg ?>;
   </script>
   <body>
-    <a href="https://docs.google.com/spreadsheets/d/1Giq0rCVZnJX_-KrITVczXsu_0e7i008mUM9xA8DJD24/edit?usp=sharing">マスタデータ</a>
+    <a hidden href="https://docs.google.com/spreadsheets/d/1Giq0rCVZnJX_-KrITVczXsu_0e7i008mUM9xA8DJD24/edit?usp=sharing">マスタデータ</a>
     <div id="d_問題">
       <div>
         <button @click="前">前</button>
-        <input disabled v-bind:value="s.現在位置"></input>
+        <input type="number" v-model="s.現在位置"></input>
         <button @click="次">次</button>
         <button @click="キャッシュクリア">キャッシュクリア</button>
       </div>
