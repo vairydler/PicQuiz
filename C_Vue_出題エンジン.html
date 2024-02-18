@@ -52,16 +52,24 @@
 
           storage.set(ret.s);
         }
-        let rnd = new XorShift(ret.s.seed);
 
-        ret.問題リスト = [...new Array(ret.s.リストサイズ)].map((e,i,a)=>i);
-        ret.問題リスト.forEach(
-          (e,i,a)=>
-          {
-            let rndidx = Math.round(rnd.u() * i);
-            [a[i],a[rndidx]] = [a[rndidx],a[i]];
-          }
-        );
+        if( nornd===0 )
+        {
+          let rnd = new XorShift(ret.s.seed);
+          ret.問題リスト = [...new Array(ret.s.リストサイズ)].map((e,i,a)=>i);
+          ret.問題リスト.forEach(
+            (e,i,a)=>
+            {
+              let rndidx = Math.round(rnd.u() * i);
+              [a[i],a[rndidx]] = [a[rndidx],a[i]];
+            }
+          );
+        }
+        else
+        {
+          ret.問題リスト = [...new Array(piclist.length)].map((e,i,a)=>i);
+          ret.s.現在位置 = ret.問題リスト.length-1;
+        }
 
         return ret;
     };
@@ -73,10 +81,45 @@
 			computed:{
 			},
 			watch:{
-        "s.現在位置":function(){
+        "s.現在位置":function(newval, oldval){
+          /* oldvalが範囲外の場合は、書き戻しによるイベントのため処理なし */
+          if( oldval <0 || this.問題リスト.length <= oldval ) return;
+
+          if( this.s.現在位置 >= this.問題リスト.length )
+          {
+            this.s.現在位置 = this.問題リスト.length-1;
+          }
+          else if( this.s.現在位置 < 0 )
+          {
+            this.s.現在位置 = 0;
+          }
+
+          if( oldval < this.s.現在位置 )
+          {
+            this.レイヤー++;
+
+            if( (先読み*2) < this.レイヤー )
+            {
+              this.レイヤー = 0;
+            }
+          }
+          else if(oldval > this.s.現在位置)
+          {
+            this.レイヤー--;
+
+            if( 0 > this.レイヤー )
+            {
+              this.レイヤー = (先読み*2);
+            }
+          }
+
           this.マスク=true;
           this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
-          storage.set( this.s );
+
+          if( nornd===0 )
+          {
+            storage.set( this.s );
+          }
         }
 			},
 			methods:{
@@ -86,28 +129,10 @@
           return piclist[ this.問題リスト[ this.s.現在位置+ オフセット ] ];
 				},
         次(){
-          if( this.問題リスト.length-1 > this.s.現在位置 )
-          {
-            this.s.現在位置++;
-            this.レイヤー++;
-
-            if( (先読み*2) < this.レイヤー )
-            {
-              this.レイヤー = 0;
-            }
-          }
+          this.s.現在位置++;
         },
         前(){
-          if( 0 < this.s.現在位置 )
-          {
-            this.s.現在位置--;
-            this.レイヤー--;
-
-            if( 0 > this.レイヤー )
-            {
-              this.レイヤー = (先読み*2);
-            }
-          }
+          this.s.現在位置--;
         },
         キャッシュクリア(){
           if( confirm("問題番号のクリアと再シャッフルをします") )
@@ -134,7 +159,7 @@
 
           this.マスクサイズ.h = h*0.25;
           this.マスクサイズ.w = this.マスクサイズ.h*hi;
-        }
+        },
 			}
 		}
 		

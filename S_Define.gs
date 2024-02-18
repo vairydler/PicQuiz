@@ -4,4 +4,5 @@ const apiref = {
 //  dbg:"0,1",
 //  api:"retrun urlJsonAry",
   app:"return webPage",
+  add:"return webPage",
 };

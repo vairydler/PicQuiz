@@ -1,0 +1,95 @@
+<script name="vue">
+(function()
+{
+	function Addエンジン()
+	{
+		function defval(){
+			return {
+        マスク:true,
+        マスクサイズ:{w:150,h:100},
+        画像アドレス:"a",
+        url:"",
+			};
+		};
+
+    function datainit(){
+        ret = defval();
+
+        return ret;
+    };
+
+		const quiz = {
+			data(){
+				return datainit();
+			},
+			computed:{
+			},
+			watch:{
+        "画像アドレス":function(){
+          this.マスク=true;
+          this.マスクリサイズ( document.querySelector(".draw img") );
+        }
+			},
+			methods:{
+				問題(){
+          return this.画像アドレス;
+				},
+        マスク切り替え(){
+          this.マスク = !this.マスク;
+        },
+        画像読み込み完了(){
+          this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+        },
+        マスクリサイズ(画像)
+        {
+          let w = 画像.width;
+          let h = 画像.height;
+          let hi = w/h;
+
+          this.マスクサイズ.h = h*0.25;
+          this.マスクサイズ.w = this.マスクサイズ.h*hi;
+        },
+        画像保存(){
+          // GASウェブアプリのURL
+          const gasUrl = deployUrl;
+          console.log(gasUrl);
+
+          /* 追加ロジックはどうやってもうまくいかない。クラウドプラットフォームをなんとかするしかないか、、 */
+          {
+            location.href = gasUrl + "?type=app&name=add&imgurl=" + "hoge";
+            //this.url = gasUrl + "?type=app&name=add&imgurl=" + "hoge";
+          }
+
+          return;
+
+          {
+            // 送信するデータ
+            const data = {
+              key1: this.画像アドレス,
+            };
+
+            // POSTリクエストのオプション
+            const options = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data)
+            };
+
+            // POSTリクエストを送信
+            fetch(gasUrl, options)
+              .then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('エラー:', error));
+          }
+        }
+			}
+		}
+		
+		return Vue.createApp( quiz ).mount( "#d_問題" );
+	};
+
+  window.Addエンジン = Addエンジン;
+})();
+</script>

@@ -1,0 +1,54 @@
+<style>
+  body{
+    --padding:10px;
+    width:calc(100% - (2 * var(--padding)));
+    height: calc(100vh - (2 * var(--padding)));
+    padding:var(--padding);
+    margin:0px;
+  }
+
+  div#d_問題{
+    display:grid;
+    grid-template-rows:30px 1fr;
+    row-gap: 10px;
+    height:100%;
+  }
+
+  header{
+    height:100%;
+    
+    display:grid;
+    grid-template-columns:50px 100px 50px 200px auto;
+    //grid-template-rows:repeat(3,10px);
+    column-gap: 10px;
+  }
+
+  main{
+    position:relative;
+    height:100%;
+  }
+  .draw{
+    position:inherit;
+    height:inherit;
+  }
+
+  .mask{
+    background-color:green;
+    position:absolute;
+  }
+  .mask.false{
+    opacity:0;
+  }
+  .mask.true{
+    opacity:1;
+  }
+  img{
+    position:absolute;
+    height:100%;
+    width:auto;
+    object-fit: fill;
+  }
+  img.noactive{
+    display:none;
+  }
+</style>

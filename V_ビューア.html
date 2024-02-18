@@ -3,58 +3,34 @@
   <head>
     <base target="_top">
   </head>
-  <style>
-    body{
-      width:100%;
-      height:100%;
-      margin:0px;
-    }
-    .mask{
-      background-color:green;
-      position:absolute;
-    }
-    .mask.false{
-      opacity:0;
-    }
-    .mask.true{
-      opacity:100;
-    }
-    img{
-      position:absolute;
-      width:100%;
-    }
-    img.noactive{
-      display:none;
-    }
-    button{
-      margin:10px;
-      padding:10px;
-    }
-  </style>
-  <script src="https://unpkg.com/vue@next"></script>
+  <?!= HtmlService.createHtmlOutputFromFile("C_CSS").getContent() ?>
+  <script src="https://unpkg.com/vue"></script>
   <?!= HtmlService.createHtmlOutputFromFile("C_JS").getContent() ?>
   <?!= HtmlService.createHtmlOutputFromFile("C_Vue_出題エンジン").getContent() ?>
   <script name="写真集">
     let piclist = <?!= piclist ?>;
     let dbg = <?!= dbg ?>;
+    let nornd = <?!= nornd ?>;
   </script>
   <body>
     <a hidden href="https://docs.google.com/spreadsheets/d/1Giq0rCVZnJX_-KrITVczXsu_0e7i008mUM9xA8DJD24/edit?usp=sharing">マスタデータ</a>
     <div id="d_問題">
-      <div>
+      <header>
         <button @click="前">前</button>
         <input type="number" v-model="s.現在位置"></input>
         <button @click="次">次</button>
         <button @click="キャッシュクリア">キャッシュクリア</button>
-      </div>
-      <div class="draw">
-        <img :class='{noactive: レイヤー!=0}' v-bind:src="問題(0)" @load="画像読み込み完了">
-        <img :class='{noactive: レイヤー!=1}' v-bind:src="問題(1)" @load="画像読み込み完了">
-        <img :class='{noactive: レイヤー!=2}' v-bind:src="問題(2)" @load="画像読み込み完了">
-        <img :class='{noactive: レイヤー!=3}' v-bind:src="問題(3)" @load="画像読み込み完了">
-        <img :class='{noactive: レイヤー!=4}' v-bind:src="問題(4)" @load="画像読み込み完了">
-        <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
-      </div>
+      </header>
+      <main>
+        <div class="draw">
+          <img :class='{noactive: レイヤー!=0}' v-bind:src="問題(0)" @load="画像読み込み完了">
+          <img :class='{noactive: レイヤー!=1}' v-bind:src="問題(1)" @load="画像読み込み完了">
+          <img :class='{noactive: レイヤー!=2}' v-bind:src="問題(2)" @load="画像読み込み完了">
+          <img :class='{noactive: レイヤー!=3}' v-bind:src="問題(3)" @load="画像読み込み完了">
+          <img :class='{noactive: レイヤー!=4}' v-bind:src="問題(4)" @load="画像読み込み完了">
+          <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
+        </div>
+      </main>
     </div>
   </body>
 </html>
