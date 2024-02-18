@@ -3,6 +3,24 @@
 {
 	function ヘルプエンジン()
 	{
+    (()=>{
+      let newAry = [];
+
+      Object.keys(apiref).forEach(
+        (command,i,a)=>
+        {
+          Object.keys(apiref[command]).forEach(
+            (value,i,a)=>
+            {
+              newAry.push({command:command,value:value,help:apiref[command][value]});
+            }
+          )
+        }
+      )
+
+      apiref = newAry;
+    })();
+
 		function defval(){
 			return {
         api:apiref

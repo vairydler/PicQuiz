@@ -13,8 +13,9 @@
   </head>
   <body id="d_ヘルプ">
     <table border=1>
-      <tr v-for="(item, index) in api">
-        <td>{{index}}</td><td>{{item}}</td>
+      <tr><th>command</th><th>value</th><th>help</th></tr>
+      <tr v-for="item in api">
+        <td>{{item.command}}</td><td>{{item.value}}</td><td>{{item.help}}</td>
       </tr>
     </table>
   </body>

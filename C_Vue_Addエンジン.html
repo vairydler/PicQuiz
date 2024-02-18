@@ -8,7 +8,6 @@
         マスク:true,
         マスクサイズ:{w:150,h:100},
         画像アドレス:"a",
-        url:"",
 			};
 		};
 
@@ -26,6 +25,7 @@
 			},
 			watch:{
         "画像アドレス":function(){
+          console.log()
           this.マスク=true;
           this.マスクリサイズ( document.querySelector(".draw img") );
         }
@@ -49,30 +49,24 @@
           this.マスクサイズ.h = h*0.25;
           this.マスクサイズ.w = this.マスクサイズ.h*hi;
         },
-        画像保存(){
+        async 画像保存(){
           // GASウェブアプリのURL
           const gasUrl = deployUrl;
-          console.log(gasUrl);
+          //console.log(gasUrl);
 
           /* 追加ロジックはどうやってもうまくいかない。クラウドプラットフォームをなんとかするしかないか、、 */
-          {
-            location.href = gasUrl + "?type=app&name=add&imgurl=" + "hoge";
-            //this.url = gasUrl + "?type=app&name=add&imgurl=" + "hoge";
-          }
-
-          return;
-
+          if(1)
           {
             // 送信するデータ
             const data = {
-              key1: this.画像アドレス,
+              img: this.画像アドレス,
             };
 
             // POSTリクエストのオプション
             const options = {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type" : "application/x-www-form-urlencoded",
               },
               body: JSON.stringify(data)
             };
@@ -82,6 +76,20 @@
               .then(response => response.json())
               .then(data => console.log(data))
               .catch(error => console.error('エラー:', error));
+          }
+          else if(0)
+          {
+            const data = {};
+            data.method = 'POST';
+            data.headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            const params = new URLSearchParams();
+            data.body = params;
+            const res = await fetch(gasUrl, data).catch(e=>console.error(e));
+            const json = await res.json();
+            return json;
           }
         }
 			}

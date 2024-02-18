@@ -26,12 +26,14 @@ class PageEngine{
 
     if( deployedUrl.slice(-3) === "dev")
     {
+      Logger.log("add slice3")
       var scriptProperties = PropertiesService.getScriptProperties();
       var deployedUrl = scriptProperties.getProperty('webapp.url');
     }
 
-    if( param.hasOwnProperty("imageurl") )
+    if( param.hasOwnProperty("imgurl") )
     {
+      Logger.log("add imgurl")
       const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
 
       Logger.log(param);

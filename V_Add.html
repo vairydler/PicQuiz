@@ -20,14 +20,15 @@
   <?!= HtmlService.createHtmlOutputFromFile("C_Vue_Addエンジン").getContent() ?>
   <body>
     <div id="d_問題">
-      <div>
+      <header>
         <input type="text" v-model="画像アドレス"></input>
-        <iframe :src="url"></iframe>
-      </div>
-      <div class="draw">
-        <img v-bind:src="問題()" @load="画像読み込み完了" @click="画像保存">
-        <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
-      </div>
+      </header>
+      <main>
+        <div class="draw">
+          <img v-bind:src="問題()" @load="画像読み込み完了" @click="画像保存">
+          <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
+        </div>
+      </main>
     </div>
   </body>
 </html>

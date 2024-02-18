@@ -4,7 +4,7 @@ function doGet(e){
 
   if( Object.keys(e.parameter).length == 0)
   {
-    temp = HtmlService.createTemplateFromFile("V_ERR.html");
+    temp = HtmlService.createTemplateFromFile("V_Help.html");
     temp.apiref = JSON.stringify(apiref);
     return temp.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
@@ -34,10 +34,11 @@ function doGet(e){
 function doPost(e){
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
 
+  let json = JSON.parse(e.postData.getDataAsString());
+
   sheet.getRange("1:1").insertCells(SpreadsheetApp.Dimension.ROWS);
   sheet.getRange(1, 1).setValue((new Date).toLocaleString('ja-JP'));
-  sheet.getRange(1, 2).setValue(e);
-  //sheet.getRange(1, 3).setValue(e.postData.contents);
+  sheet.getRange(1, 2).setValue(json.img);
 
   const output = ContentService.createTextOutput(JSON.stringify({result:"Ok"}));
   output.setMimeType(ContentService.MimeType.JSON);
