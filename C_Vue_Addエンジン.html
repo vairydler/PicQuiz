@@ -5,9 +5,10 @@
 	{
 		function defval(){
 			return {
-        マスク:true,
+        マスク:false,
         マスクサイズ:{w:150,h:100},
-        画像アドレス:"a",
+        画像アドレス:"",
+        画像表示:false
 			};
 		};
 
@@ -25,9 +26,8 @@
 			},
 			watch:{
         "画像アドレス":function(){
-          console.log()
-          this.マスク=true;
-          this.マスクリサイズ( document.querySelector(".draw img") );
+          this.マスク=false;
+          this.画像表示 = false;
         }
 			},
 			methods:{
@@ -38,7 +38,9 @@
           this.マスク = !this.マスク;
         },
         画像読み込み完了(){
+          this.マスク=true;
           this.マスクリサイズ( document.querySelector(".draw img:not(.noactive)") );
+          this.画像表示 = true;
         },
         マスクリサイズ(画像)
         {
@@ -50,6 +52,8 @@
           this.マスクサイズ.w = this.マスクサイズ.h*hi;
         },
         async 画像保存(){
+          if( !confirm("登録しますか？") ) return;
+
           // GASウェブアプリのURL
           const gasUrl = deployUrl;
           //console.log(gasUrl);
@@ -59,6 +63,7 @@
           {
             // 送信するデータ
             const data = {
+              req:"add",
               img: this.画像アドレス,
             };
 

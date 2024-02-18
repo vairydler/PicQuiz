@@ -32,16 +32,22 @@ function doGet(e){
 }
 
 function doPost(e){
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
-
   let json = JSON.parse(e.postData.getDataAsString());
 
-  sheet.getRange("1:1").insertCells(SpreadsheetApp.Dimension.ROWS);
-  sheet.getRange(1, 1).setValue((new Date).toLocaleString('ja-JP'));
-  sheet.getRange(1, 2).setValue(json.img);
+  switch(e.req)
+  {
+    case "add":
+      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
 
-  const output = ContentService.createTextOutput(JSON.stringify({result:"Ok"}));
-  output.setMimeType(ContentService.MimeType.JSON);
+      sheet.getRange("1:1").insertCells(SpreadsheetApp.Dimension.ROWS);
+      sheet.getRange(1, 1).setValue((new Date).toLocaleString('ja-JP'));
+      sheet.getRange(1, 2).setValue(json.img);
+
+      const output = ContentService.createTextOutput(JSON.stringify({result:true}));
+      output.setMimeType(ContentService.MimeType.JSON);
+      break;
+  }
+
   return output;
 }
 
