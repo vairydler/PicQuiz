@@ -77,10 +77,21 @@
             };
 
             // POSTリクエストを送信
-            fetch(gasUrl, options)
-              .then(response => response.json())
-              .then(data => console.log(data))
-              .catch(error => console.error('エラー:', error));
+            var handleError = function (err) {
+                console.error(err);
+                return new Response(JSON.stringify({
+                    code: 400,
+                    message: 'fetch error',
+                    result:false,
+                }));
+            };
+
+            const res = await (fetch(gasUrl, options).catch(handleError));
+            const json = await (res.json().catch(handleError));
+            
+            if( json.result ){
+              this.画像アドレス ="";
+            }
           }
           else if(0)
           {

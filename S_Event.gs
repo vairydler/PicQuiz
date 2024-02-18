@@ -32,9 +32,10 @@ function doGet(e){
 }
 
 function doPost(e){
+  let output = ContentService.createTextOutput(JSON.stringify({result:false}));
   let json = JSON.parse(e.postData.getDataAsString());
 
-  switch(e.req)
+  switch(json.req)
   {
     case "add":
       const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
@@ -43,7 +44,7 @@ function doPost(e){
       sheet.getRange(1, 1).setValue((new Date).toLocaleString('ja-JP'));
       sheet.getRange(1, 2).setValue(json.img);
 
-      const output = ContentService.createTextOutput(JSON.stringify({result:true}));
+      output = ContentService.createTextOutput(JSON.stringify({result:true}));
       output.setMimeType(ContentService.MimeType.JSON);
       break;
   }
