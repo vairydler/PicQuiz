@@ -38,11 +38,10 @@ function doPost(e){
   switch(json.req)
   {
     case "add":
-      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
-
-      sheet.getRange("1:1").insertCells(SpreadsheetApp.Dimension.ROWS);
-      sheet.getRange(1, 1).setValue((new Date).toLocaleString('ja-JP'));
-      sheet.getRange(1, 2).setValue(json.img);
+      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("問題");
+      sheet.getRange(sheet.getLastRow()+1,1,1,2 ).setValues([[json.img,(new Date).toLocaleString('ja-JP')]]);
+      //重複は削除
+      sheet.getDataRange().removeDuplicates([1]);
 
       output = ContentService.createTextOutput(JSON.stringify({result:true}));
       output.setMimeType(ContentService.MimeType.JSON);

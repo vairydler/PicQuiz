@@ -1,3 +1,4 @@
 function myFunction() {
-  doGet({parameter:{api:1}});
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート4");
+
 }
