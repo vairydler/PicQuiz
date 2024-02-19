@@ -43,6 +43,9 @@ function doPost(e){
       //重複は削除
       sheet.getDataRange().removeDuplicates([1]);
 
+      //GASによる変更ではイベントはトリガされないらしい。
+      変更時();
+
       output = ContentService.createTextOutput(JSON.stringify({result:true}));
       output.setMimeType(ContentService.MimeType.JSON);
       break;
