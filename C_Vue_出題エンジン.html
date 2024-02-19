@@ -139,6 +139,9 @@
           {
             /* ローカルストレージを削除し、リロード */
             storage.clear();
+            /* 以下はどっちもダメ。 */
+            //location.reload();
+            //window.open(deployUrl, '_top');
             
             let init = datainit();
             this.s = init.s;

@@ -12,6 +12,7 @@ class PageEngine{
     temp.piclist = this.prop.getProperty(prop_URL);
     temp.dbg = Number(param.dbg) ? 1 : 0;
     temp.nornd = param.hasOwnProperty("nornd") ? 1 : 0;
+    temp.deployUrl = this.getDeployedUrl();
 
     ret = temp.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     ret.setTitle("写真当てクイズ");
