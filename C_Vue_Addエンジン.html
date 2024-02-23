@@ -3,6 +3,16 @@
 {
 	function Addエンジン()
 	{
+    /* URLクエリの削除 *//* 一応残骸として残すが、クエリパラメータ込で画像表示するものがあるため基本的に封印 */
+    function queryDelete( url ){
+      const urlQueryReg = new RegExp("(^.*)\\?.*$");
+      if( urlQueryReg.test(url))
+      {
+        url = url.replace(urlQueryReg,"$1");
+      }
+      return url;
+    }
+
 		function defval(){
 			return {
         マスク:false,

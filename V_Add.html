@@ -27,7 +27,12 @@
       <main>
         <div class="draw">
           <img v-show="画像表示" v-bind:src="問題()" @load="画像読み込み完了" @click="画像保存">
-          <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え">追加は画像をクリック</div>
+          <div class="mask" :class="[マスク ? 'true':'false']" :style="{'width':マスクサイズ.w +'px','height':マスクサイズ.h+'px'}" @click="マスク切り替え"></div>
+          <ul class="help">
+            <li>「追加する画像URL」に画像URLを貼り付けてください。画像が表示されれば、それをクリックしてください。</li>
+            <li>同じURLは重複登録できません。サーバー側で弾いています。</li>
+            <li>登録した画像を本体に反映する場合、本体側にて再シャッフル→ページリロードを行ってください。</li>
+          </ul>
         </div>
       </main>
     </div>
